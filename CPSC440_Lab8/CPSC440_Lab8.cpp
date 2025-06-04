@@ -60,6 +60,7 @@ int main() {
 	int rdirection = 1;
 	float facing = 1;
 	int speed = 3;
+	int pause = false;
 	al_draw_scaled_bitmap(background, 0, 0, 1024, 1024, 0, 0, 640, 480, 0);
 	al_draw_rotated_bitmap(character, 32, 32, x, y, 0, 0);
 	al_start_timer(timer);
@@ -70,7 +71,7 @@ int main() {
 		if (event.type == ALLEGRO_EVENT_DISPLAY_CLOSE) {
 			exit = true;
 		}
-		else if (event.type == ALLEGRO_EVENT_KEY_DOWN && direction == facing) {
+		else if (event.type == ALLEGRO_EVENT_KEY_DOWN) {
 			switch (event.keyboard.keycode) {
 				case ALLEGRO_KEY_UP:
 					if (direction == 1)
@@ -104,62 +105,71 @@ int main() {
 
 					direction = 3;
 					break;
-				//case ALLEGRO_KEY_SPACE:
+				case ALLEGRO_KEY_SPACE:
+					if (pause) {
+						pause = false;
+					}
+					else {
+						pause = true;
+					}
+					
 			}
 		}
 
-		//Direction Based Movement
-		if (direction == facing) {
-			switch (direction) {
-			case 0:
-				y -= speed;
-				break;
-			case 1:
-				x += speed;
-				break;
-			case 2:
-				y += speed;
-				break;
-			case 3:
-				x -= speed;
-				break;
+		if (!pause) {
+			//Direction Based Movement
+			if (direction == facing) {
+				switch (direction) {
+				case 0:
+					y -= speed;
+					break;
+				case 1:
+					x += speed;
+					break;
+				case 2:
+					y += speed;
+					break;
+				case 3:
+					x -= speed;
+					break;
+				}
 			}
-		}
-		else {
-			facing += rdirection * .1;
-			printf("facing: %f, direction: %i\n", facing, direction);
-			if (std::abs(direction - facing) < 0.00001f) {
-				facing = direction;
+			//Rotation
+			else {
+				facing += rdirection * .1;
+				if (std::abs(direction - facing) < 0.00001f) {
+					facing = direction;
+				}
+				else if (facing > 3 && rdirection == 1) {
+					facing -= 4;
+				}
+				else if (facing < 0 && rdirection == -1) {
+					facing += 4;
+				}
 			}
-			else if (facing > 3 && rdirection == 1) {
-				facing -= 4;
-			}
-			else if (facing < 0 && rdirection == -1) {
-				facing += 4;
-			}
-		}
-		
 
-		if (y <= 32) {
-			y = 32;
-			direction = 2;
-		}
-		else if (x >= width - 32) {
-			x = width - 32;
-			direction = 3;
-		}
-		else if (y >= height - 32) {
-			y = height - 32;
-			direction = 0;
-		}
-		else if (x <= 32) {
-			x = 32;
-			direction = 1;
-		}
+			//Border turning
+			if (y <= 32) {
+				y = 32;
+				direction = 2;
+			}
+			else if (x >= width - 32) {
+				x = width - 32;
+				direction = 3;
+			}
+			else if (y >= height - 32) {
+				y = height - 32;
+				direction = 0;
+			}
+			else if (x <= 32) {
+				x = 32;
+				direction = 1;
+			}
 
-		al_draw_scaled_bitmap(background, 0, 0, 1024, 1024, 0, 0, 640, 480, 0);
-		al_draw_rotated_bitmap(character, 32, 32, x, y, facing * ALLEGRO_PI / 2, 0);
-		al_flip_display();
+			//Drawing to Display
+			al_draw_scaled_bitmap(background, 0, 0, 1024, 1024, 0, 0, 640, 480, 0);
+			al_draw_rotated_bitmap(character, 32, 32, x, y, facing * ALLEGRO_PI / 2, 0);
+			al_flip_display();
+		}
 	}
-
 }
