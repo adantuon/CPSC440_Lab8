@@ -56,7 +56,7 @@ int main() {
 	int x = width / 2;
 	int y = height / 2;
 	int direction = 1;
-	int speed = 2;
+	int speed = 3;
 	al_draw_scaled_bitmap(background, 0, 0, 1024, 1024, 0, 0, 640, 480, 0);
 	al_draw_rotated_bitmap(character, 32, 32, x, y, 0, 0);
 	al_start_timer(timer);
@@ -99,6 +99,23 @@ int main() {
 			case 3:
 				x -= speed;
 				break;
+		}
+
+		if (y <= 32) {
+			y = 32;
+			direction = 2;
+		}
+		else if (x >= width - 32) {
+			x = width - 32;
+			direction = 3;
+		}
+		else if (y >= height - 32) {
+			y = height - 32;
+			direction = 0;
+		}
+		else if (x <= 32) {
+			x = 32;
+			direction = 1;
 		}
 
 		al_draw_scaled_bitmap(background, 0, 0, 1024, 1024, 0, 0, 640, 480, 0);
