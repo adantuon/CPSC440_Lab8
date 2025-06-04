@@ -2,7 +2,6 @@
 #include <allegro5/allegro.h>
 #include <allegro5/allegro_image.h>
 #include <cstdlib>
-#include <stdio.h>
 
 int main() {
 
