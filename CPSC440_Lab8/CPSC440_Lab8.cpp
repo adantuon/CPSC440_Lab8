@@ -1,6 +1,7 @@
 //Aiden D'Antuono
 #include <allegro5/allegro.h>
 #include <allegro5/allegro_image.h>
+#include <stdio.h>
 
 int main() {
 
@@ -35,6 +36,10 @@ int main() {
 	if (!eventQueue)
 		return -1;
 
+	//Keyboard Installation
+	if (!al_install_keyboard())
+		return -1;
+
 	//image init
 	if (!al_init_image_addon())
 		return -1;
@@ -45,10 +50,12 @@ int main() {
 
 	//Register event sources
 	al_register_event_source(eventQueue, al_get_display_event_source(display));
+	al_register_event_source(eventQueue, al_get_keyboard_event_source());
 	al_register_event_source(eventQueue, al_get_timer_event_source(timer));
 
 	int x = width / 2;
 	int y = height / 2;
+	int direction = 1;
 	al_draw_scaled_bitmap(background, 0, 0, 1024, 1024, 0, 0, 640, 480, 0);
 	al_draw_rotated_bitmap(character, 32, 32, x, y, 0, 0);
 	al_start_timer(timer);
@@ -59,9 +66,26 @@ int main() {
 		if (event.type == ALLEGRO_EVENT_DISPLAY_CLOSE) {
 			exit = true;
 		}
+		else if (event.type == ALLEGRO_EVENT_KEY_DOWN) {
+			switch (event.keyboard.keycode) {
+				case ALLEGRO_KEY_UP:
+					direction = 0;
+					break;
+				case ALLEGRO_KEY_RIGHT:
+					direction = 1;
+					break;
+				case ALLEGRO_KEY_DOWN:
+					direction = 2;
+					break;
+				case ALLEGRO_KEY_LEFT:
+					direction = 3;
+					break;
+				//case ALLEGRO_KEY_SPACE:
+			}
+		}
 
 		al_draw_scaled_bitmap(background, 0, 0, 1024, 1024, 0, 0, 640, 480, 0);
-		al_draw_rotated_bitmap(character, 32, 32, x, y, 0, 0);
+		al_draw_rotated_bitmap(character, 32, 32, x, y, direction * ALLEGRO_PI / 2, 0);
 		al_flip_display();
 	}
 
