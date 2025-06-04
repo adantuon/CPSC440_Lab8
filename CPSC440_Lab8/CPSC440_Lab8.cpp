@@ -57,6 +57,7 @@ int main() {
 	int x = width / 2;
 	int y = height / 2;
 	int direction = 1;
+	int rdirection = 1;
 	float facing = 1;
 	int speed = 3;
 	al_draw_scaled_bitmap(background, 0, 0, 1024, 1024, 0, 0, 640, 480, 0);
@@ -69,18 +70,38 @@ int main() {
 		if (event.type == ALLEGRO_EVENT_DISPLAY_CLOSE) {
 			exit = true;
 		}
-		else if (event.type == ALLEGRO_EVENT_KEY_DOWN) {
+		else if (event.type == ALLEGRO_EVENT_KEY_DOWN && direction == facing) {
 			switch (event.keyboard.keycode) {
 				case ALLEGRO_KEY_UP:
+					if (direction == 1)
+						rdirection = -1;
+					else
+						rdirection = 1;
+
 					direction = 0;
 					break;
 				case ALLEGRO_KEY_RIGHT:
+					if (direction == 2)
+						rdirection = -1;
+					else
+						rdirection = 1;
 					direction = 1;
+
 					break;
 				case ALLEGRO_KEY_DOWN:
+					if (direction == 3)
+						rdirection = -1;
+					else
+						rdirection = 1;
+
 					direction = 2;
 					break;
 				case ALLEGRO_KEY_LEFT:
+					if (direction == 0)
+						rdirection = -1;
+					else
+						rdirection = 1;
+
 					direction = 3;
 					break;
 				//case ALLEGRO_KEY_SPACE:
@@ -105,13 +126,16 @@ int main() {
 			}
 		}
 		else {
-			facing += .1;
+			facing += rdirection * .1;
 			printf("facing: %f, direction: %i\n", facing, direction);
 			if (std::abs(direction - facing) < 0.00001f) {
 				facing = direction;
 			}
-			else if (std::abs(4.0 - facing) < 0.00001f) {
-				facing = 0;
+			else if (facing > 3 && rdirection == 1) {
+				facing -= 4;
+			}
+			else if (facing < 0 && rdirection == -1) {
+				facing += 4;
 			}
 		}
 		
