@@ -1,6 +1,7 @@
 //Aiden D'Antuono
 #include <allegro5/allegro.h>
 #include <allegro5/allegro_image.h>
+#include <cstdlib>
 #include <stdio.h>
 
 int main() {
@@ -56,6 +57,7 @@ int main() {
 	int x = width / 2;
 	int y = height / 2;
 	int direction = 1;
+	float facing = 1;
 	int speed = 3;
 	al_draw_scaled_bitmap(background, 0, 0, 1024, 1024, 0, 0, 640, 480, 0);
 	al_draw_rotated_bitmap(character, 32, 32, x, y, 0, 0);
@@ -86,7 +88,8 @@ int main() {
 		}
 
 		//Direction Based Movement
-		switch (direction) {
+		if (direction == facing) {
+			switch (direction) {
 			case 0:
 				y -= speed;
 				break;
@@ -99,7 +102,19 @@ int main() {
 			case 3:
 				x -= speed;
 				break;
+			}
 		}
+		else {
+			facing += .1;
+			printf("facing: %f, direction: %i\n", facing, direction);
+			if (std::abs(direction - facing) < 0.00001f) {
+				facing = direction;
+			}
+			else if (std::abs(4.0 - facing) < 0.00001f) {
+				facing = 0;
+			}
+		}
+		
 
 		if (y <= 32) {
 			y = 32;
@@ -119,7 +134,7 @@ int main() {
 		}
 
 		al_draw_scaled_bitmap(background, 0, 0, 1024, 1024, 0, 0, 640, 480, 0);
-		al_draw_rotated_bitmap(character, 32, 32, x, y, direction * ALLEGRO_PI / 2, 0);
+		al_draw_rotated_bitmap(character, 32, 32, x, y, facing * ALLEGRO_PI / 2, 0);
 		al_flip_display();
 	}
 
