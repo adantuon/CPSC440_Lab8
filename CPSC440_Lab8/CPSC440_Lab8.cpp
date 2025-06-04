@@ -7,8 +7,8 @@
 int main() {
 
 	const int FPS = 60;
-	int width = 640;
-	int height = 480;
+	int width = 900;
+	int height = 800;
 	bool exit = false;
 
 	ALLEGRO_DISPLAY *display = NULL;
@@ -59,7 +59,7 @@ int main() {
 	int direction = 1;
 	int rdirection = 1;
 	float facing = 1;
-	int speed = 3;
+	int speed = 5;
 	int pause = false;
 	al_draw_scaled_bitmap(background, 0, 0, 1024, 1024, 0, 0, 640, 480, 0);
 	al_draw_rotated_bitmap(character, 32, 32, x, y, 0, 0);
@@ -167,7 +167,7 @@ int main() {
 			}
 
 			//Drawing to Display
-			al_draw_scaled_bitmap(background, 0, 0, 1024, 1024, 0, 0, 640, 480, 0);
+			al_draw_scaled_bitmap(background, 0, 0, 1024, 1024, 0, 0, 900, 800, 0);
 			al_draw_rotated_bitmap(character, 32, 32, x, y, facing * ALLEGRO_PI / 2, 0);
 			al_flip_display();
 		}
