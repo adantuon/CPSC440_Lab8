@@ -47,6 +47,11 @@ int main() {
 	al_register_event_source(eventQueue, al_get_display_event_source(display));
 	al_register_event_source(eventQueue, al_get_timer_event_source(timer));
 
+	int x = width / 2;
+	int y = height / 2;
+	al_draw_scaled_bitmap(background, 0, 0, 1024, 1024, 0, 0, 640, 480, 0);
+	al_draw_rotated_bitmap(character, 32, 32, x, y, 0, 0);
+	al_start_timer(timer);
 	while (!exit) {
 		ALLEGRO_EVENT event;
 		al_wait_for_event(eventQueue, &event);
@@ -54,6 +59,10 @@ int main() {
 		if (event.type == ALLEGRO_EVENT_DISPLAY_CLOSE) {
 			exit = true;
 		}
+
+		al_draw_scaled_bitmap(background, 0, 0, 1024, 1024, 0, 0, 640, 480, 0);
+		al_draw_rotated_bitmap(character, 32, 32, x, y, 0, 0);
+		al_flip_display();
 	}
 
 }
